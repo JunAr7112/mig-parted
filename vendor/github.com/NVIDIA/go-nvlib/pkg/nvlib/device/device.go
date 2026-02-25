@@ -29,6 +29,7 @@ type Device interface {
 	GetArchitectureAsString() (string, error)
 	GetBrandAsString() (string, error)
 	GetCudaComputeCapabilityAsString() (string, error)
+	GetAddressingModeAsString() (string, error)
 	GetMigDevices() ([]MigDevice, error)
 	GetMigProfiles() ([]MigProfile, error)
 	GetPCIBusID() (string, error)
@@ -144,6 +145,32 @@ func (d *device) GetBrandAsString() (string, error) {
 		return "TitanRTX", nil
 	}
 	return "", fmt.Errorf("error interpreting device brand as string: %v", brand)
+}
+
+// GetAddressingModeAsString returns the Device addressing mode as a string.
+func (d *device) GetAddressingModeAsString() (string, error) {
+	mode, ret := d.GetAddressingMode()
+
+	switch ret {
+	case nvml.SUCCESS:
+		// continue
+	case nvml.ERROR_NOT_SUPPORTED:
+		// Addressing mode is not supported on the current platform.
+		return "", nil
+	default:
+		return "", fmt.Errorf("error getting device addressing mode: %v", ret)
+	}
+
+	switch nvml.DeviceAddressingModeType(mode.Value) {
+	case nvml.DEVICE_ADDRESSING_MODE_ATS:
+		return "ATS", nil
+	case nvml.DEVICE_ADDRESSING_MODE_HMM:
+		return "HMM", nil
+	case nvml.DEVICE_ADDRESSING_MODE_NONE:
+		return "None", nil
+	}
+
+	return "", fmt.Errorf("error interpreting addressing mode as string: %v", mode)
 }
 
 // GetPCIBusID returns the string representation of the bus ID.
@@ -346,8 +373,8 @@ func (d *device) VisitMigProfiles(visit func(MigProfile) error) error {
 			return fmt.Errorf("error getting GPU Instance profile info: %v", ret)
 		}
 
-		for j := 0; j < nvml.COMPUTE_INSTANCE_PROFILE_COUNT; j++ {
-			for k := 0; k < nvml.COMPUTE_INSTANCE_ENGINE_PROFILE_COUNT; k++ {
+		for j := nvml.COMPUTE_INSTANCE_PROFILE_COUNT - 1; j >= 0; j-- {
+			for k := nvml.COMPUTE_INSTANCE_ENGINE_PROFILE_COUNT - 1; k >= 0; k-- {
 				p, err := d.lib.NewMigProfile(i, j, k, giProfileInfo.MemorySizeMB, memory.Total)
 				if err != nil {
 					return fmt.Errorf("error creating MIG profile: %v", err)

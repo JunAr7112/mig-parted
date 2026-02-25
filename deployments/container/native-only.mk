@@ -15,7 +15,10 @@
 PUSH_ON_BUILD ?= false
 ATTACH_ATTESTATIONS ?= false
 DOCKER_BUILD_OPTIONS = --output=type=image,push=$(PUSH_ON_BUILD) --provenance=$(ATTACH_ATTESTATIONS) --sbom=$(ATTACH_ATTESTATIONS)
-DOCKER_BUILD_PLATFORM_OPTIONS ?= --platform=linux/amd64
+# Default to host architecture so local builds work on arm64 and amd64
+HOST_ARCH := $(shell uname -m)
+HOST_ARCH_DOCKER := $(patsubst x86_64,amd64,$(patsubst aarch64,arm64,$(HOST_ARCH)))
+DOCKER_BUILD_PLATFORM_OPTIONS ?= --platform=linux/$(HOST_ARCH_DOCKER)
 
 ifeq ($(PUSH_ON_BUILD),true)
 $(BUILD_TARGETS): build-%: image-%

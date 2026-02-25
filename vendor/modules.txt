@@ -1,4 +1,4 @@
-# github.com/NVIDIA/go-nvlib v0.8.1
+# github.com/NVIDIA/go-nvlib v0.8.1 => github.com/JunAr7112/go-nvlib v0.0.0-20260311191626-4ec2aefa464e
 ## explicit; go 1.20
 github.com/NVIDIA/go-nvlib/pkg/nvlib/device
 github.com/NVIDIA/go-nvlib/pkg/nvpci
@@ -493,3 +493,4 @@ sigs.k8s.io/structured-merge-diff/v6/value
 # sigs.k8s.io/yaml v1.6.0
 ## explicit; go 1.22
 sigs.k8s.io/yaml
+# github.com/NVIDIA/go-nvlib => github.com/JunAr7112/go-nvlib v0.0.0-20260311191626-4ec2aefa464e
