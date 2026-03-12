@@ -18,6 +18,7 @@ package device
 
 import (
 	"fmt"
+	"log"
 	"strings"
 
 	"github.com/NVIDIA/go-nvml/pkg/nvml"
@@ -377,7 +378,8 @@ func (d *device) VisitMigProfiles(visit func(MigProfile) error) error {
 			for k := nvml.COMPUTE_INSTANCE_ENGINE_PROFILE_COUNT - 1; k >= 0; k-- {
 				p, err := d.lib.NewMigProfile(i, j, k, giProfileInfo.MemorySizeMB, memory.Total)
 				if err != nil {
-					return fmt.Errorf("error creating MIG profile: %v", err)
+					log.Printf("Skipping MIG profile (GI=%d, CI=%d, CIEng=%d): %v", i, j, k, err)
+					continue
 				}
 
 				// NOTE: The NVML API doesn't currently let us query the set of
