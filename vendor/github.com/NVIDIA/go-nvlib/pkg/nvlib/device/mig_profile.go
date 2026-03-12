@@ -109,10 +109,6 @@ func (d *devicelib) NewMigProfile(giProfileID, ciProfileID, ciEngProfileID int, 
 		return nil, fmt.Errorf("invalid Compute Instance Profile ID: %v", ciProfileID)
 	}
 
-	if ciProfileID == nvml.COMPUTE_INSTANCE_PROFILE_1_SLICE_REV1 && giProfileID != nvml.GPU_INSTANCE_PROFILE_1_SLICE_REV2 {
-		return nil, fmt.Errorf("invalid Compute Instance Profile ID: %v and GPU Instance Profile ID: %v", ciProfileID, giProfileID)
-	}
-
 	var attrs []string
 	switch giProfileID {
 	case nvml.GPU_INSTANCE_PROFILE_1_SLICE_REV1,

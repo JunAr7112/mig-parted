@@ -25,6 +25,7 @@ import (
 	"github.com/NVIDIA/mig-parted/cmd/nvidia-mig-parted/apply"
 	"github.com/NVIDIA/mig-parted/cmd/nvidia-mig-parted/assert"
 	"github.com/NVIDIA/mig-parted/cmd/nvidia-mig-parted/checkpoint"
+	"github.com/NVIDIA/mig-parted/cmd/nvidia-mig-parted/discover"
 	"github.com/NVIDIA/mig-parted/cmd/nvidia-mig-parted/export"
 	"github.com/NVIDIA/mig-parted/cmd/nvidia-mig-parted/generateconfig"
 	"github.com/NVIDIA/mig-parted/cmd/nvidia-mig-parted/restore"
@@ -63,6 +64,7 @@ func main() {
 	c.Commands = []*cli.Command{
 		apply.BuildCommand(),
 		assert.BuildCommand(),
+		discover.BuildCommand(),
 		export.BuildCommand(),
 		generateconfig.BuildCommand(),
 		checkpoint.BuildCommand(),
@@ -81,6 +83,8 @@ func main() {
 		assertLog.SetLevel(logLevel)
 		exportLog := export.GetLogger()
 		exportLog.SetLevel(logLevel)
+		discoverLog := discover.GetLogger()
+		discoverLog.SetLevel(logLevel)
 		generateConfigLog := generateconfig.GetLogger()
 		generateConfigLog.SetLevel(logLevel)
 		checkpointLog := export.GetLogger()
