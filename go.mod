@@ -2,7 +2,7 @@ module github.com/NVIDIA/mig-parted
 
 go 1.25.0
 
-replace github.com/NVIDIA/go-nvlib => github.com/JunAr7112/go-nvlib v0.0.0-20260409203618-da976e0ef107
+replace github.com/NVIDIA/go-nvlib => github.com/JunAr7112/go-nvlib v0.0.0-20260413204441-8efe333e89c2
 
 require (
 	github.com/NVIDIA/go-nvlib v0.8.1

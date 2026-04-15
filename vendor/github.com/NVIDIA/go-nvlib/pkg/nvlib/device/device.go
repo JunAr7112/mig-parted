@@ -17,6 +17,7 @@
 package device
 
 import (
+	"cmp"
 	"fmt"
 	"strings"
 
@@ -345,6 +346,17 @@ func (d *device) VisitMigDevices(visit func(int, MigDevice) error) error {
 	return nil
 }
 
+// computeInstanceProfilePreferred will select the compute profile with the highest SliceCount, then MultiprocessorCount, then Id.
+func computeInstanceProfilePreferred(a, b nvml.ComputeInstanceProfileInfo_v2) bool {
+	if c := cmp.Compare(a.SliceCount, b.SliceCount); c != 0 {
+		return c > 0
+	}
+	if c := cmp.Compare(a.MultiprocessorCount, b.MultiprocessorCount); c != 0 {
+		return c > 0
+	}
+	return cmp.Compare(a.Id, b.Id) > 0
+}
+
 // VisitMigProfiles walks a top-level device and invokes a callback function for each unique MIG Profile that can be configured on it.
 func (d *device) VisitMigProfiles(visit func(MigProfile) error) error {
 	capable, err := d.IsMigCapable()
@@ -372,37 +384,79 @@ func (d *device) VisitMigProfiles(visit func(MigProfile) error) error {
 		if ret != nvml.SUCCESS {
 			return fmt.Errorf("error getting GPU Instance profile info: %v", ret)
 		}
+		gi, ret := d.CreateGpuInstance(&giProfileInfo)
+		if ret != nvml.SUCCESS {
+			return fmt.Errorf("error creating GPU instance: %v", ret)
+		}
 
-		for j := nvml.COMPUTE_INSTANCE_PROFILE_COUNT - 1; j >= 0; j-- {
-			for k := nvml.COMPUTE_INSTANCE_ENGINE_PROFILE_COUNT - 1; k >= 0; k-- {
-				p, err := d.lib.NewMigProfile(i, j, k, giProfileInfo.MemorySizeMB, memory.Total)
-				if err != nil {
-					return fmt.Errorf("error creating MIG profile: %v", err)
-				}
+		err := func() error {
+			defer gi.Destroy()
 
-				// NOTE: The NVML API doesn't currently let us query the set of
-				// valid Compute Instance profiles without first instantiating
-				// a GPU Instance to check against. In theory, it should be
-				// possible to get this information without a reference to a
-				// GPU instance, but no API is provided for that at the moment.
-				// We run the checks below to weed out invalid profiles
-				// heuristically, given what we know about how they are
-				// physically constructed. In the future we should do this via
-				// NVML once a proper API for this exists.
-				pi := p.GetInfo()
-				if pi.C > pi.G {
-					continue
-				}
-				if (pi.C < pi.G) && ((pi.C * 2) > (pi.G + 1)) {
-					continue
-				}
+			// NOTE: NVML does not expose compute-instance profile enumeration
+			// without a GPU instance handle; we create a temporary GI per profile id.
+			var migProfile MigProfile
+			var migProfileValid bool
+			var maxProfile nvml.ComputeInstanceProfileInfo_v2
 
-				err = visit(p)
-				if err != nil {
-					return fmt.Errorf("error visiting MIG profile: %v", err)
+			for j := 0; j < nvml.COMPUTE_INSTANCE_PROFILE_COUNT; j++ {
+				for k := 0; k < nvml.COMPUTE_INSTANCE_ENGINE_PROFILE_COUNT; k++ {
+					//p, err := d.lib.NewMigProfile(i, j, k, giProfileInfo.MemorySizeMB, memory.Total)
+					//if err != nil {
+					//	return fmt.Errorf("Skipping MIG profile (GI=%d, CI=%d, CIEng=%d): %v", i, j, k, err)
+					//}
+
+					currProfile, nvmlRet := gi.GetComputeInstanceProfileInfoV(j, k).V2()
+					if nvmlRet == nvml.ERROR_NOT_SUPPORTED {
+						continue
+					}
+					if nvmlRet != nvml.SUCCESS {
+						return fmt.Errorf("error getting compute instance profile info: %v", nvmlRet)
+					}
+					if computeInstanceProfilePreferred(currProfile, maxProfile) {
+						maxProfile = currProfile
+						newProfile, perr := d.lib.NewMigProfile(i, j, k, giProfileInfo.MemorySizeMB, memory.Total)
+						if perr != nil {
+							return fmt.Errorf("error creating new MIG profile: %v", perr)
+						}
+						migProfile = newProfile
+						migProfileValid = true
+					}
 				}
 			}
+
+			// NOTE: The NVML API doesn't currently let us query the set of
+			// valid Compute Instance profiles without first instantiating
+			// a GPU Instance to check against. In theory, it should be
+			// possible to get this information without a reference to a
+			// GPU instance, but no API is provided for that at the moment.
+			// We run the checks below to weed out invalid profiles
+			// heuristically, given what we know about how they are
+			// physically constructed. In the future we should do this via
+			// NVML once a proper API for this exists.
+			// pi := p.GetInfo()
+			// if pi.C > pi.G {
+			// 	continue
+			// }
+			// if (pi.C < pi.G) && ((pi.C * 2) > (pi.G + 1)) {
+			// 	continue
+			// }
+			//if pi.CIProfileID == 7 && pi.GIProfileID != 9 {
+			//	continue
+			//}
+
+			if !migProfileValid {
+				return nil
+			}
+			return visit(migProfile)
+		}()
+		if err != nil {
+			return err
 		}
+
+		// err = visit(p)
+		// if err != nil {
+		// 	return fmt.Errorf("error visiting MIG profile: %v", err)
+		// }
 	}
 	return nil
 }
