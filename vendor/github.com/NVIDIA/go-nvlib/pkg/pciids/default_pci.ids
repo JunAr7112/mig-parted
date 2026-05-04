@@ -6920,7 +6920,7 @@
 	c567  82C750 [Vendetta] Host Bridge
 	c568  82C750 [Vendetta] ISA Bridge
 	c569  82C579 [Viper XPress+ Chipset]
-	c621  82C621A PCI IDE Contoller
+	c621  82C621A PCI IDE Controller
 	c700  82C700 [FireStar]
 	c701  82C700 [FireStar] Host Bridge
 	c814  82C814 [FireBridge II] Docking Stration Controller
@@ -10326,7 +10326,7 @@
 	0068  nForce2 USB Controller
 		1043 0c11  A7N8X Mainboard
 		a0a0 03b4  UK79G-1394 motherboard
-	006a  nForce2 AC97 Audio Controler (MCP)
+	006a  nForce2 AC97 Audio Controller (MCP)
 		1043 8095  nForce2 AC97 Audio Controller (MCP)
 		a0a0 0304  UK79G-1394 motherboard
 	006b  nForce Audio Processing Unit
@@ -17818,7 +17818,7 @@
 	9009  DM9009 Ethernet Controller
 	9100  21x4x DEC-Tulip compatible 10/100 Ethernet
 	9102  DM9102 Fast Ethernet Controller
-# Subsystem ID is main ID reveresed.
+# Subsystem ID is main ID reversed.
 		0291 8212  DM9102A (DM9102AE, SM9102AF) Ethernet 100/10 MBit
 	9132  Ethernet 100/10 MBit
 1283  Integrated Technology Express, Inc.
@@ -26716,7 +26716,7 @@
 	9203  ZX-200 USB eXtensible Host Controller
 	9204  KX-6000/KX-6000G/KX-7000 USB3 xHCI Host Controller
 	9205  KH-40000 USB eXtensible Host Controller
-	9206  KX-7000 USB4 Contoller
+	9206  KX-7000 USB4 Controller
 	9286  ZX-D eMMC Host Controller
 	9300  ZX-100/KX-5000/KX-6000/KX-6000G/KH-40000/KX-7000 eSPI Host Controller
 	9500  KX-7000 I2S Controller
@@ -28013,7 +28013,7 @@
 1eb1  VeriSilicon Inc
 	1001  Video Accelerator
 1eb4  Quantum Nebula Microelectronics Technology Co.,Ltd.
-	3401  SSD Contoller
+	3401  SSD Controller
 1eb6  Wuxi Stars Microsystem Technology Co., Ltd
 1eb9  Senscomm Semiconductor, Inc
 	2020  SCM2625 Wi-Fi6 Network Adapter
@@ -29961,7 +29961,7 @@
 		8086 02a4  Dual Band Wi-Fi 5(802.11ac) Wireless-AC 9462 80MHz 1x1 [Jefferson Peak]
 		8086 4070  Dual Band Wi-Fi 6(802.11ax) AX201 160MHz 2x2 [Harrison Peak]
 	02f5  Comet Lake PCH-LP SCS3
-	02f9  Comet Lake Thermal Subsytem
+	02f9  Comet Lake Thermal Subsystem
 		1028 09be  Latitude 7410
 	02fc  Comet Lake Integrated Sensor Solution
 		1028 09be  Latitude 7410
@@ -32411,7 +32411,7 @@
 	19a9  Atom Processor C3000 Series PCI Express Root Port #5
 	19aa  Atom Processor C3000 Series PCI Express Root Port #6
 	19ab  Atom Processor C3000 Series PCI Express Root Port #7
-	19ac  Atom Processor C3000 Series SMBus Contoller - Host
+	19ac  Atom Processor C3000 Series SMBus Controller - Host
 	19b0  Atom Processor C3000 Series SATA Controller 0
 	19b1  Atom Processor C3000 Series SATA Controller 0
 	19b2  Atom Processor C3000 Series SATA Controller 0
@@ -34179,12 +34179,12 @@
 		e4bf 58b1  XB1
 	266c  82801FB/FBM/FR/FW/FRW (ICH6 Family) LAN Controller
 	266d  82801FB/FBM/FR/FW/FRW (ICH6 Family) AC'97 Modem Controller
-		1025 006a  Conexant AC'97 CoDec (in Acer TravelMate 2410 serie laptop)
+		1025 006a  Conexant AC'97 CoDec (in Acer TravelMate 2410 series laptop)
 		103c 0934  Compaq nw8240/nx8220
 		103c 099c  NX6110/NC6120
 	266e  82801FB/FBM/FR/FW/FRW (ICH6 Family) AC'97 Audio Controller
 		1014 0581  ThinkPad X41 (Analog Devices AD1981B codec)
-		1025 006a  Realtek ALC 655 codec (in Acer TravelMate 2410 serie laptop)
+		1025 006a  Realtek ALC 655 codec (in Acer TravelMate 2410 series laptop)
 		1028 0177  Dimension 8400
 		1028 0179  Optiplex GX280
 		1028 0182  Latitude D610 Laptop
@@ -37410,7 +37410,7 @@
 	6f52  Xeon Processor D Family QuickData Technology Register DMA Channel 2
 	6f53  Xeon Processor D Family QuickData Technology Register DMA Channel 3
 	6f54  Xeon Processor D Family QuickAssist Technology
-	6f55  Xeon Processor D Family QuickAssist Technology Virtual Fuction
+	6f55  Xeon Processor D Family QuickAssist Technology Virtual Function
 	6f60  Xeon E7 v4/Xeon E5 v4/Xeon E3 v4/Xeon D Home Agent 1
 	6f68  Xeon E7 v4/Xeon E5 v4/Xeon E3 v4/Xeon D Target Address/Thermal/RAS
 	6f6a  Xeon E7 v4/Xeon E5 v4/Xeon E3 v4/Xeon D Channel Target Address Decoder
